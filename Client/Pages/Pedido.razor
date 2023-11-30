@@ -1,0 +1,109 @@
+﻿@page "/pedido"
+@using KimdanishopeApp1.Shared.Models;
+
+<h3>Realiza tu pedido</h3>
+<div class="row">
+    <div class="col-6">
+        @if (accesorios != null)
+        {
+            <select class="form-select" aria-label="Default select example">
+                <option selected disabled> Selecciona el accesorio</option>
+                @foreach (var item in accesorios)
+                {
+                    <option value=@item.Id>@item.Accesorios</option>
+                }
+            </select>
+        }
+        @if (accesorioSeleccionado.Id > 0)
+        {
+            @if (inspiracion != null)
+            {
+                <select class="form-select" aria-label="Default select example">
+                    <option selected disabled>Selecciona de que inspiracion lo quieres</option>
+                    @foreach (var item in inspiracion)
+                    {
+                        <option value=@item.Id>@item.Nombre</option>
+                    }
+                </select>
+            }
+        }
+        @if (inspiracionSeleccionado.Id > 0)
+        {
+            @foreach(var item in adicional)
+            {
+                <div class="form-check" style="display:inline-block;margin-right:2rem">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                        <label class="form-check-label" for="flexCheckDefault">
+                            @item.tipo @if(item.tipo == "photocard")
+                            {
+                                <span class="badge bg-warnig">Nuevo</span>
+                            }
+                        </label>
+                </div>
+            }
+        }
+        @if (costoadicional > 0.0 && accesorioSeleccionado.Precio > 0.0 && inspiracionSeleccionado.Precio > 0.0)
+        {
+            <div class="d-grid gap-2" style="margin-top:2rem">
+            <button class="btn btn-outline-primary" type="button" @onclick="Ordenar" disabled="@ordenando">Ordenar</button>
+            </div>
+        }
+        @if (ordenando)
+        {
+            <div class="text-center" style="margin-top:5rem">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Ordenando...</span>
+                </div>
+            </div>
+        }
+    </div>
+
+</div>
+
+@code {
+
+    List<Accesorio> accesorios = new List<Accesorio>();
+    List<Inspiracion> inspiracion = new List<Inspiracion>();
+    List<Adicional> adicional = new List<Adicional>();
+    Accesorio accesorioSeleccionado = new Accesorio();
+    Inspiracion inspiracionSeleccionado = new Inspiracion();
+    Adicional nvoAdicional = new Adicional();
+
+    float costoadicional = 0.0f;
+    float totalPedido = 0.0f;
+    bool ordenando = false;
+
+    List<Adicional> adicionalSel = new List<Adicional>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        nvoAdicional = new Adicional { tipo = "Stickers", Precio = 10.0F };
+    }
+
+    private void IngSel(Adicional adicional, ChangeEventArgs args)
+    {
+        bool prueba = bool.Parse(args.Value.ToString());
+        costoadicional = 0.0f;
+
+        if (prueba)
+        {
+            adicionalSel.Add(adicional);
+        }
+        else
+        {
+            adicionalSel.Remove(adicional);
+        }
+
+        foreach (var item in adicionalSel)
+        {
+            costoadicional += item.Precio;
+        }
+
+        totalPedido = accesorioSeleccionado.Precio + inspiracionSeleccionado.Precio + costoadicional;
+    }
+
+    private void Ordenar()
+    {
+        ordenando = true;
+    }
+}

@@ -1,0 +1,39 @@
+﻿@page "/Login"
+@using KimdanishopeApp1.Client.Auth;
+@using KimdanishopeApp1.Shared.Models;
+@using System.Text.Json;
+@inject HttpClient client
+@inject ILoginService loginService
+@inject NavigationManager navManager
+
+<h3>Login</h3>
+
+<EditForm Model="userInfo" OnInvalidSubmit="LoginUsuario">
+    <DataAnnotationsValidator />
+    <div class="mb-3">
+        <label>Usuario:</label>
+        <div>
+            <InputText class="form-control" @bind-Value="userInfo.UserName" />
+            <ValidationMessage For="@(() => userInfo.UserName)" />
+        </div>
+    </div>
+    <div class="mb-3">
+        <label>Email:</label>
+        <div>
+            <InputText class="form-control" @bind-Value="userInfo.Email" />
+            <ValidationMessage For="@(() => userInfo.Email)" />
+        </div>
+    </div>
+    <div class="mb-3">
+        <label>Password:</label>
+        <div>
+            <InputText type="Password" class="form-control" @bind-Value="userInfo.Password" />
+            <ValidationMessage For="@(() => userInfo.Password)" />
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Ingresar</button>
+</EditForm>
+
+@code {
+    private UserInfo userInfo = new UserInfo();
+}
