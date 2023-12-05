@@ -39,19 +39,21 @@ namespace KimdanishopeApp1.Server.Controllers
             return inspiracion;
         }
 
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        [HttpGet ("Adicional")]
+        public async Task<List<Adicional>> adicional()
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            List<Adicional> adicional = new List<Adicional>();
+            adicional = await context.Adicional.ToListAsync();
+
+            return adicional;
+        }
+
+        [HttpPost ("nvoadicional")]
+        public async Task<int> NuevoAdicional(Adicional nvoAdicional)
+        {
+            context.Add(nvoAdicional);
+            await context.SaveChangesAsync();
+            return nvoAdicional.Id;
         }
     }
 }
