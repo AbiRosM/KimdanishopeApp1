@@ -44,7 +44,7 @@
         {
             userToken = await response.Content.ReadFromJsonAsync<UserToken>();
             await loginService.Login(userToken.Token);
-            navManager.NavigateTo("/Armala");
+            navManager.NavigateTo("/Pedido");
         }
     }
 }

@@ -36,4 +36,16 @@
 
 @code {
     private UserInfo userInfo = new UserInfo();
+    UserToken userToken = new UserToken();
+
+    private async Task LoginUsuario()
+    {
+        var response = await client.PostAsJsonAsync("api/Cuentas/Login", userInfo);
+        if (response.StatusCode == System.Net.HttpStatusCode.OK)
+        {
+            userToken = await response.Content.ReadFromJsonAsync<UserToken>();
+            await loginService.Login(userToken.Token);
+            navManager.NavigateTo("/Pedido");
+        }
+    }
 }
